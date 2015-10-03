@@ -13,7 +13,7 @@ import javax.sound.sampled.SourceDataLine;
  * they are playing
  * 
  * @author Robert
- *
+ * 
  */
 public class Sound implements Runnable {
 
@@ -101,11 +101,16 @@ public class Sound implements Runnable {
 	 * to false.
 	 */
 	public void run() {
+		File soundFile = new File(path);
+		if (!soundFile.exists()){
+			return;
+		}
 		SourceDataLine soundLine = null;
 		int BUFFER_SIZE = 64 * 1024;
 
 		try {
-			File soundFile = new File(path);
+			//File soundFile = new File(path);
+
 			AudioInputStream audioInputStream = AudioSystem
 					.getAudioInputStream(soundFile);
 			AudioFormat audioFormat = audioInputStream.getFormat();
@@ -124,6 +129,7 @@ public class Sound implements Runnable {
 					soundLine.write(sampledData, 0, nBytesRead);
 				}
 			}
+
 		} catch (Exception e) {
 			System.err.println("Could not start music!");
 		}
@@ -149,10 +155,10 @@ public class Sound implements Runnable {
 		return play;
 	}
 
-//	/**
-//	 * sometime in the future can be used to set the Volume of the audio file
-//	 */
-//	public void setVolume() {
-//		// TODO
-//	}
+	// /**
+	// * sometime in the future can be used to set the Volume of the audio file
+	// */
+	// public void setVolume() {
+	// // TODO
+	// }
 }
