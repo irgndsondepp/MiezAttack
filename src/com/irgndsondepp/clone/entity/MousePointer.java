@@ -54,8 +54,8 @@ public class MousePointer extends Entity {
 	 */
 	public void render(Screen screen) {
 
-		screen.renderSprite(x - sprite.SIZE / 2, y - sprite.SIZE / 2, sprite,
-				false);
+		screen.renderScaledSprite(x - sprite.SIZE / 2, y - sprite.SIZE / 2, 1, sprite,
+				false, false);
 
 	}
 

@@ -36,6 +36,7 @@ public class Game extends Canvas implements Runnable {
 	public static int scale = 2;
 	public static int framerate = 60;
 	public static String title = "Clone Game";
+	public static boolean dynamicLighting = true;
 
 	private Thread thread;
 	private JFrame frame;

@@ -588,8 +588,8 @@ public class Level {
 					- 15;
 			int ydraw = 15;
 			screen.renderScaledSprite(xdraw, ydraw, gun.getScale(),
-					Sprite.weaponBox, false);
-			screen.renderItem(xdraw, ydraw, gun, false);
+					Sprite.weaponBox, false, false);
+			screen.renderItem(xdraw, ydraw, gun, false, false);
 
 			xdraw -= Sprite.full_bullet.SIZE;
 			ydraw += (gun.getSprite().SIZE) * gun.getScale()
@@ -621,12 +621,12 @@ public class Level {
 
 			for (int i = 0; i < fullBullets; i++) {
 				screen.renderScaledSprite(xdraw, ydraw, 1, Sprite.full_bullet,
-						false);
+						false, false);
 				xdraw -= Sprite.full_bullet.SIZE;
 			}
 			for (int j = 0; j < emptyBullets; j++) {
 				screen.renderScaledSprite(xdraw, ydraw, 1, Sprite.spent_bullet,
-						false);
+						false, false);
 				xdraw -= Sprite.spent_bullet.SIZE;
 			}
 		}

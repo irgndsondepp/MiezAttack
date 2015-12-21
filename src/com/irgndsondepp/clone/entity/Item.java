@@ -65,7 +65,7 @@ public class Item extends Entity {
 	 * render the object
 	 */
 	public void render(Screen screen) {
-		screen.renderItem(x, y, this, true);
+		screen.renderItem(x, y, this, true, true);
 	}
 
 	/**
