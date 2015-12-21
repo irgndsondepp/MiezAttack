@@ -53,7 +53,7 @@ public class SpawnLevel extends Level {
 		this.tile_size = this.getTile(0, 0).size;
 
 		// add Dummys
-		for (int i = 0; i < 185; i++) {
+		for (int i = 0; i < (int) (0.9 * game.startingMiezen); i++) {
 			int x = random.nextInt(width);
 			int y = random.nextInt(height);
 			while (this.getTile(x, y).solid()) {
@@ -64,7 +64,7 @@ public class SpawnLevel extends Level {
 		}
 
 		// add chasers off screen from the player
-		for (int i = 0; i < 15; i++) {
+		for (int i = 0; i < (int) (0.1 * game.startingMiezen); i++) {
 			int px = 50 * tile_size;
 			int py = 50 * tile_size;
 			int x = random.nextInt(this.width);
