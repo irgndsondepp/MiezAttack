@@ -11,6 +11,7 @@ import com.irgndsondepp.clone.entity.mob.IntelligentMob;
 import com.irgndsondepp.clone.entity.mob.Mob;
 import com.irgndsondepp.clone.entity.projectile.Projectile;
 import com.irgndsondepp.clone.level.tile.Tile;
+import com.sun.prism.paint.Color;
 
 /**
  * the screen class which holds the pixels copied to buffer in the game class. a
@@ -341,43 +342,92 @@ public class Screen {
 	}
 
 	/**
+	 * This method will create a glowing ball of light
+	 * 
+	 * @param col
+	 * @return
+	 */
+	public void AddDynamicLighting(int xa, int ya, int radius, int intensity) {
+		if (!Game.dynamicLighting) return;
+		xa -= this.xOffset;
+		ya -= this.yOffset;
+		
+
+		for (int x = xa - radius; x < xa + radius; x++) {
+			for (int y = ya - radius; y < ya + radius; y++) {
+				if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
+					continue;
+				}
+				// do not do this if it is inside the light radius of the player
+				if (Math.sqrt(Math.pow(this.width/2 - x, 2)+Math.pow(this.height /2 - y, 2))<72){
+					continue;
+				}
+				Random random = new Random();
+				if (Math.sqrt(Math.pow(xa - x, 2) + Math.pow(ya - y, 2)) > (radius-25 + random.nextInt(25))) {
+					continue;
+				}
+				int[] val = new int[4];
+				String hexValues = Integer.toHexString(pixels[x + y * width]);
+
+				if (hexValues.length() < 8)
+					continue;
+
+				for (int i = 0; i < val.length; i++) {
+					String parseValue = hexValues.substring(i * 2, i * 2 + 2);
+					int n = (int) Long.parseLong(parseValue, 16);
+					if (i == 0) {
+						val[i] = n;
+					} else {
+						int temp = (int) (intensity * Math.sqrt(Math.pow(xa - x, 2) + Math.pow(ya - y, 2)));
+						if (temp > n) {
+							temp = n;
+						}
+						val[i] = n - (int)0.2*intensity + temp;
+					}
+				}
+				int col = 0;
+				for (int j = 0; j < val.length; j++) {
+					col += (int) (val[j] * Math.pow(16, (val.length - 1 - j) * 2));
+				}
+				pixels[x + y * width] = col;
+			}
+		}
+
+	}
+
+	/**
 	 * This method will darken the color so a radius of light around the player
 	 * is achieved.
 	 * 
 	 * @param col
 	 * @return
 	 */
-	private int calculateDynamicLighting(int col, int x, int y) {
+	public int calculateDynamicLighting(int col, int x, int y) {
+
 		Random random = new Random();
 		if (Math.sqrt(Math.pow(this.width / 2 - x, 2) + Math.pow(this.height / 2 - y, 2)) < (70 + random.nextInt(5))) {
 			return col;
 		}
-		int darkerCol = 0;
-		int[] val = new int[4];
+		double percentage = Math.sqrt(Math.pow(this.width / 2 - x, 2) + Math.pow(this.height / 2 - y, 2));
+		
 		String hexValues = Integer.toHexString(col);
+		int darkerCol = 0;
 		if (hexValues.length() < 8)
 			return darkerCol;
-		for (int i = 0; i < val.length; i++) {
-			String parseValue = hexValues.substring(i * 2, i * 2 + 1);
+		for (int i = 0; i < 4; i++) {
+			String parseValue = hexValues.substring(i * 2, i * 2 + 2);
 			int n = (int) Long.parseLong(parseValue, 16);
 			if (i == 0) {
-				val[i] = n;
+				darkerCol += 0xff000000;
 			} else {
-				int temp = (int) (0.05 * Math.sqrt(Math.pow(this.width / 2 - x, 2) + Math.pow(this.height / 2 - y, 2)));
+
+				int temp = (int) (0.5 * percentage);
 				if (temp > n) {
 					temp = n;
 				}
-				val[i] = n + 10 - temp;
+				darkerCol += (n + 10 - temp)*Math.pow(16, (3-i)*2);
 			}
 		}
-		for (int j = 0; j < val.length; j++) {
-			darkerCol += (int) (val[j] * Math.pow(16, (val.length - 1 - j) * 2));
-		}
-		/*
-		 * System.out.println(hexValues); System.out.println("New Hex: " +
-		 * Integer.toHexString(darkerCol));
-		 */
-
 		return darkerCol;
 	}
 

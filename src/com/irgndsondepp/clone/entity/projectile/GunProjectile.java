@@ -29,6 +29,7 @@ public class GunProjectile extends DudeProjectile {
 		super(x, y, dam, speed, dir);
 		this.range = 200;
 		this.sprite = Sprite.projectile_gun;
+		this.addLighting = false;
 		leftEdge = 5;
 		rightEdge = 7;
 		topEdge = 6;

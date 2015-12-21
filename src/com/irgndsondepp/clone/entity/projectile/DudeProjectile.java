@@ -14,6 +14,7 @@ import com.irgndsondepp.clone.graphics.Sprite;
 public class DudeProjectile extends Projectile {
 
 	public static int FIRE_RATE = 30;
+	public boolean addLighting =true;
 
 	// private boolean removed;
 
@@ -85,6 +86,9 @@ public class DudeProjectile extends Projectile {
 	 */
 	public void render(Screen screen) {
 		screen.renderProjectile((int) x - 8, (int) y - 4, this);
+		if (addLighting){
+		screen.AddDynamicLighting((int) x, (int) y, 30, 500);
+		}
 	}
 
 	/**
@@ -115,8 +119,7 @@ public class DudeProjectile extends Projectile {
 	 */
 	protected double distance() {
 		double dist = 0;
-		dist = Math.sqrt(((xOrigin - x) * (xOrigin - x))
-				+ ((yOrigin - y) * (yOrigin - y)));
+		dist = Math.sqrt(((xOrigin - x) * (xOrigin - x)) + ((yOrigin - y) * (yOrigin - y)));
 		return dist;
 	}
 

@@ -3,6 +3,7 @@ package com.irgndsondepp.clone.entity.mob;
 import com.irgndsondepp.clone.audio.Sound;
 import com.irgndsondepp.clone.entity.spawner.ParticleSpawner;
 import com.irgndsondepp.clone.graphics.AnimatedSprite;
+import com.irgndsondepp.clone.graphics.Screen;
 import com.irgndsondepp.clone.graphics.Sprite;
 import com.irgndsondepp.clone.graphics.SpriteSheet;
 
@@ -54,6 +55,11 @@ public class BurningCat extends Dummy {
 		}
 
 		this.hitpoints = 180;
+	}
+	
+	public void render(Screen screen) {
+		super.render(screen);
+		screen.AddDynamicLighting(this.x, this.y, 30, 15);		
 	}
 
 	/**
