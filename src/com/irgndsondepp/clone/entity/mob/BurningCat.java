@@ -59,7 +59,7 @@ public class BurningCat extends Dummy {
 	
 	public void render(Screen screen) {
 		super.render(screen);
-		screen.AddDynamicLighting(this.x, this.y, 30, 15);		
+		screen.AddDynamicLighting(this.x, this.y, 30, 35);		
 	}
 
 	/**

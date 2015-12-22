@@ -2,13 +2,10 @@ package com.irgndsondepp.clone.level;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
 import com.irgndsondepp.clone.Game;
 import com.irgndsondepp.clone.entity.mob.Chaser;
 import com.irgndsondepp.clone.entity.mob.Dummy;
-import com.irgndsondepp.clone.graphics.Sprite;
 import com.irgndsondepp.clone.level.tile.Tile;
 
 /**

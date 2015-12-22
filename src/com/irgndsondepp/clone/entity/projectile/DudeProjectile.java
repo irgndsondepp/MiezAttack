@@ -87,7 +87,7 @@ public class DudeProjectile extends Projectile {
 	public void render(Screen screen) {
 		screen.renderProjectile((int) x - 8, (int) y - 4, this);
 		if (addLighting){
-		screen.AddDynamicLighting((int) x, (int) y, 30, 500);
+		screen.AddDynamicLighting((int) x, (int) y, 30, 35);
 		}
 	}
 

@@ -536,12 +536,16 @@ public class Player extends Mob {
 
 			screen.renderMob(this, xx, yy);
 		}
-
-		// render the players crosshair if not dead
+	}
+	
+	/**
+	 * render the players crosshair if not dead
+	 * @param screen
+	 */
+	public void renderCrosshair(Screen screen){
 		if (!dead) {
 			crosshair.render(screen);
 		}
-
 	}
 
 	/**

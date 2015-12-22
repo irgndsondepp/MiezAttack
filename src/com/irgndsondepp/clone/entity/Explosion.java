@@ -63,7 +63,7 @@ public class Explosion extends Entity {
 	public void render(Screen screen) {
 		screen.renderSprite(x - SPRITE_SIZE / 2, y - SPRITE_SIZE / 2,
 				animSprite.getSprite(), true);
-		screen.AddDynamicLighting(x - SPRITE_SIZE /2, y-SPRITE_SIZE /2, radius, 500);
+		screen.AddDynamicLighting(x - SPRITE_SIZE /2, y-SPRITE_SIZE /2, radius, 50);
 
 	}
 

@@ -1,7 +1,6 @@
 package com.irgndsondepp.clone.graphics;
 
 import java.util.Random;
-
 import com.irgndsondepp.clone.Game;
 import com.irgndsondepp.clone.entity.Item;
 import com.irgndsondepp.clone.entity.MedKit;
@@ -11,7 +10,6 @@ import com.irgndsondepp.clone.entity.mob.IntelligentMob;
 import com.irgndsondepp.clone.entity.mob.Mob;
 import com.irgndsondepp.clone.entity.projectile.Projectile;
 import com.irgndsondepp.clone.level.tile.Tile;
-import com.sun.prism.paint.Color;
 
 /**
  * the screen class which holds the pixels copied to buffer in the game class. a
@@ -20,7 +18,7 @@ import com.sun.prism.paint.Color;
  * a menu screen with a menu boolean-value.
  * 
  * @author Robert
- *
+ * 
  */
 public class Screen {
 
@@ -82,7 +80,8 @@ public class Screen {
 	 *            level, else the SpriteSheet will always be at the same
 	 *            position on screen
 	 */
-	public void renderSpriteSheet(int xpos, int ypos, SpriteSheet sheet, boolean fixed) {
+	public void renderSpriteSheet(int xpos, int ypos, SpriteSheet sheet,
+			boolean fixed) {
 		if (fixed) {
 			xpos -= xOffset;
 			ypos -= yOffset;
@@ -93,7 +92,8 @@ public class Screen {
 				int xa = x + xpos;
 				// only do the operation if the spritesheet will be visible on
 				// screen
-				if (xa < -sheet.WIDTH || xa >= width || ya < -sheet.HEIGHT || ya >= height)
+				if (xa < -sheet.WIDTH || xa >= width || ya < -sheet.HEIGHT
+						|| ya >= height)
 					break;
 				if (xa >= 0 && ya >= 0) {
 					int col = sheet.pixels[x + y * sheet.WIDTH];
@@ -138,7 +138,8 @@ public class Screen {
 	 *            if true the item is fixed in the level, otherwise it is fixed
 	 *            on the screen
 	 */
-	public void renderItem(int xpos, int ypos, Item item, boolean fixed, boolean dynLighting) {
+	public void renderItem(int xpos, int ypos, Item item, boolean fixed,
+			boolean dynLighting) {
 		// can be fixed
 		if (fixed) {
 			xpos -= xOffset;
@@ -157,7 +158,8 @@ public class Screen {
 						int ys = y;
 						int xa = x * scale + t + xpos;
 						int xs = x;
-						if (xa < -scale * sprite.getWidth() || xa >= width || ya < -scale * sprite.getHeight()
+						if (xa < -scale * sprite.getWidth() || xa >= width
+								|| ya < -scale * sprite.getHeight()
 								|| ya >= height)
 							break;
 						if (xa >= 0 && ya >= 0) {
@@ -166,13 +168,15 @@ public class Screen {
 							// 0x->Hexzahl ff->alpha ff->R, 00->G, ff->B ==>
 							// pink
 							if (item instanceof MedKit) {
-								if ((((MedKit) item).getHealingValue() >= 50) && (col == 0xffc6c6c6)) {
+								if ((((MedKit) item).getHealingValue() >= 50)
+										&& (col == 0xffc6c6c6)) {
 									col = 0xff1e00ff;
 								}
 							}
 							if (col != 0xffFF00FF) {
 								if (dynLighting && Game.dynamicLighting) {
-									pixels[xa + ya * width] = calculateDynamicLighting(col, xa, ya);
+									pixels[xa + ya * width] = calculateDynamicLighting(
+											col, xa, ya);
 								} else {
 									pixels[xa + ya * width] = col;
 								}
@@ -242,7 +246,8 @@ public class Screen {
 						int xa = x * scale + s + xpos;
 						int xs = x;
 						// only do stuff if the object is visible on screen
-						if (xa < -scale * sprite.getWidth() || xa >= width || ya < -scale * sprite.getHeight()
+						if (xa < -scale * sprite.getWidth() || xa >= width
+								|| ya < -scale * sprite.getHeight()
 								|| ya >= height)
 							break;
 						// only draw valid values
@@ -252,18 +257,25 @@ public class Screen {
 							// 0x->Hexzahl ff->alpha ff->R, 00->G, ff->B ==>
 							// pink
 							if (col != 0xffFF00FF) {
-								if (((mob instanceof Chaser) && col <= 0xffffffff && col >= 0xffdadada)) {
+								if (((mob instanceof Chaser)
+										&& col <= 0xffffffff && col >= 0xffdadada)) {
 									col = 0xffdc0000;
 								}
-								if (mob instanceof BurningChaser && col <= 0xffffffff && col >= 0xffdadada
-										&& !(col == 0xffff0000) && !(col == 0xffff5e00) && !(col == 0xffffd200)) {
+								if (mob instanceof BurningChaser
+										&& col <= 0xffffffff
+										&& col >= 0xffdadada
+										&& !(col == 0xffff0000)
+										&& !(col == 0xffff5e00)
+										&& !(col == 0xffffd200)) {
 									col = 0xffdc0000;
 								}
-								if ((mob instanceof IntelligentMob && col <= 0xffffffff && col >= 0xffdadada)) {
+								if ((mob instanceof IntelligentMob
+										&& col <= 0xffffffff && col >= 0xffdadada)) {
 									col = 0xff298e37;
 								}
 								if (Game.dynamicLighting) {
-									pixels[xa + ya * width] = calculateDynamicLighting(col, xa, ya);
+									pixels[xa + ya * width] = calculateDynamicLighting(
+											col, xa, ya);
 								} else {
 									pixels[xa + ya * width] = col;
 								}
@@ -303,7 +315,8 @@ public class Screen {
 	 * @param sprite
 	 *            is the sprite to be drawn
 	 */
-	public void renderScaledSprite(int xpos, int ypos, int scale, Sprite sprite, boolean fixed, boolean dynLighting) {
+	public void renderScaledSprite(int xpos, int ypos, int scale,
+			Sprite sprite, boolean fixed, boolean dynLighting) {
 		if (fixed) {
 			xpos -= xOffset;
 			ypos -= yOffset;
@@ -319,7 +332,8 @@ public class Screen {
 						int ys = y;
 						int xa = x * scale + t + xpos;
 						int xs = x;
-						if (xa < -scale * sprite.getWidth() || xa >= width || ya < -scale * sprite.getHeight()
+						if (xa < -scale * sprite.getWidth() || xa >= width
+								|| ya < -scale * sprite.getHeight()
 								|| ya >= height)
 							break;
 						if (xa >= 0 && ya >= 0) {
@@ -329,7 +343,8 @@ public class Screen {
 							// pink
 							if (col != 0xffFF00FF) {
 								if (dynLighting && Game.dynamicLighting) {
-									pixels[xa + ya * width] = calculateDynamicLighting(col, xa, ya);
+									pixels[xa + ya * width] = calculateDynamicLighting(
+											col, xa, ya);
 								} else {
 									pixels[xa + ya * width] = col;
 								}
@@ -348,10 +363,10 @@ public class Screen {
 	 * @return
 	 */
 	public void AddDynamicLighting(int xa, int ya, int radius, int intensity) {
-		if (!Game.dynamicLighting) return;
+		if (!Game.dynamicLighting)
+			return;
 		xa -= this.xOffset;
 		ya -= this.yOffset;
-		
 
 		for (int x = xa - radius; x < xa + radius; x++) {
 			for (int y = ya - radius; y < ya + radius; y++) {
@@ -359,35 +374,49 @@ public class Screen {
 					continue;
 				}
 				// do not do this if it is inside the light radius of the player
-				if (Math.sqrt(Math.pow(this.width/2 - x, 2)+Math.pow(this.height /2 - y, 2))<72){
+
+				if (Math.sqrt(Math.pow(this.width / 2 - x, 2)
+						+ Math.pow(this.height / 2 - y, 2)) < 72) {
 					continue;
 				}
+
 				Random random = new Random();
-				if (Math.sqrt(Math.pow(xa - x, 2) + Math.pow(ya - y, 2)) > (radius-25 + random.nextInt(25))) {
+				double factor = Math.sqrt(Math.pow(xa - x, 2)
+						+ Math.pow(ya - y, 2));
+				if (factor > (radius - (radius / 3) + random.nextInt(radius / 3))) {
 					continue;
 				}
-				int[] val = new int[4];
+
 				String hexValues = Integer.toHexString(pixels[x + y * width]);
 
 				if (hexValues.length() < 8)
 					continue;
-
-				for (int i = 0; i < val.length; i++) {
-					String parseValue = hexValues.substring(i * 2, i * 2 + 2);
-					int n = (int) Long.parseLong(parseValue, 16);
-					if (i == 0) {
-						val[i] = n;
-					} else {
-						int temp = (int) (intensity * Math.sqrt(Math.pow(xa - x, 2) + Math.pow(ya - y, 2)));
-						if (temp > n) {
-							temp = n;
-						}
-						val[i] = n - (int)0.2*intensity + temp;
-					}
-				}
 				int col = 0;
-				for (int j = 0; j < val.length; j++) {
-					col += (int) (val[j] * Math.pow(16, (val.length - 1 - j) * 2));
+				for (int i = 0; i < 4; i++) {
+					if (i == 0) {
+						col += 0xff000000;
+						continue;
+					}
+					String parseValue = hexValues.substring(i * 2, i * 2 + 2);
+					int n = (int) Long.parseLong(parseValue, 16);					
+					n += intensity;
+					if (n > 255) {
+						n = 255;
+					}
+					
+					if (i != 1) {
+						n -= (int) factor;
+					}
+					else{
+						n -= (int) 0.2 * factor;
+					}
+					if (n < 0) {
+						n = 0;
+					}
+
+					col += (int) (n * Math.pow(16, (3 - i) * 2));
+					// val[i] = n + temp;// + (int) 0.2 * intensity - temp;
+
 				}
 				pixels[x + y * width] = col;
 			}
@@ -403,30 +432,30 @@ public class Screen {
 	 * @return
 	 */
 	public int calculateDynamicLighting(int col, int x, int y) {
-
+		if (!Game.dynamicLighting)
+			return col;
 		Random random = new Random();
-		if (Math.sqrt(Math.pow(this.width / 2 - x, 2) + Math.pow(this.height / 2 - y, 2)) < (70 + random.nextInt(5))) {
+		double factor = Math.sqrt(Math.pow(this.width / 2 - x, 2)
+				+ Math.pow(this.height / 2 - y, 2));
+		if (factor < (70 + random.nextInt(5))) {
 			return col;
 		}
-		double percentage = Math.sqrt(Math.pow(this.width / 2 - x, 2) + Math.pow(this.height / 2 - y, 2));
-		
 		String hexValues = Integer.toHexString(col);
-		int darkerCol = 0;
+		int darkerCol = 0xff000000;
 		if (hexValues.length() < 8)
-			return darkerCol;
-		for (int i = 0; i < 4; i++) {
+			return col;
+		for (int i = 1; i < 4; i++) {			
 			String parseValue = hexValues.substring(i * 2, i * 2 + 2);
 			int n = (int) Long.parseLong(parseValue, 16);
-			if (i == 0) {
-				darkerCol += 0xff000000;
-			} else {
-
-				int temp = (int) (0.5 * percentage);
-				if (temp > n) {
-					temp = n;
-				}
-				darkerCol += (n + 10 - temp)*Math.pow(16, (3-i)*2);
+			int temp = (int) (0.5 * factor);
+			n = n + 10 - temp;
+			if (n < 0) {
+				n = 0;
+			} else if (n > 255) {
+				n = 255;
 			}
+			darkerCol += n * Math.pow(16, (3 - i) * 2);
+
 		}
 		return darkerCol;
 	}
@@ -513,7 +542,8 @@ public class Screen {
 		int h = (int) (((double) height) * factor / 2);
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				if ((x <= w) || (x >= width - w) || (y <= h) || (y >= height - h)) {
+				if ((x <= w) || (x >= width - w) || (y <= h)
+						|| (y >= height - h)) {
 					pixels[x + y * width] = 0xff000000;
 
 				}
