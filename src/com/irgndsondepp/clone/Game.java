@@ -35,10 +35,13 @@ public class Game extends Canvas implements Runnable {
 	public static int height = width / 16 * 9;
 	public static int scale = 2;
 	public static int framerate = 60;
-	public static String title = "Clone Game";
-	public static boolean dynamicLighting = true;
+	public static String title = "Clone Game";	
 	public static int startingMiezen = 200;
-
+	// show the game in fullscreen mode
+	private boolean fullscreen = true;
+	// show dynamicLighting
+	public static boolean dynamicLighting = true;
+	
 	private Thread thread;
 	private JFrame frame;
 	private boolean running = false;
@@ -50,8 +53,7 @@ public class Game extends Canvas implements Runnable {
 	private Player player;
 	private Random random = new Random();
 
-	// show the game in fullscreen mode
-	private boolean fullscreen = false;
+	
 
 	private BufferedImage image = new BufferedImage(width, height,
 			BufferedImage.TYPE_INT_RGB);

@@ -373,13 +373,7 @@ public class Screen {
 				if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
 					continue;
 				}
-				// do not do this if it is inside the light radius of the player
-
-				if (Math.sqrt(Math.pow(this.width / 2 - x, 2)
-						+ Math.pow(this.height / 2 - y, 2)) < 72) {
-					continue;
-				}
-
+				
 				Random random = new Random();
 				double factor = Math.sqrt(Math.pow(xa - x, 2)
 						+ Math.pow(ya - y, 2));
