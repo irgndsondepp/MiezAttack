@@ -582,6 +582,7 @@ public class Level {
 		// show the weapon box with the player weapon if equipped and player
 		// alive
 		Player p = getClientPlayer();
+		screen.lightRadius();
 		p.renderCrosshair(screen);
 		if (boss != null) {
 			screen.renderHealthBar(boss.getHP(), boss.getMaxHP());

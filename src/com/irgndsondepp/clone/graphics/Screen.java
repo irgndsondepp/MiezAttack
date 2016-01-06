@@ -174,12 +174,7 @@ public class Screen {
 								}
 							}
 							if (col != 0xffFF00FF) {
-								if (dynLighting && (Game.dynamicLighting >= 1)) {
-									pixels[xa + ya * width] = calculateDynamicLighting(
-											col, xa, ya);
-								} else {
-									pixels[xa + ya * width] = col;
-								}
+								pixels[xa + ya * width] = col;
 							}
 						}
 					}
@@ -273,12 +268,8 @@ public class Screen {
 										&& col <= 0xffffffff && col >= 0xffdadada)) {
 									col = 0xff298e37;
 								}
-								if (Game.dynamicLighting >= 1) {
-									pixels[xa + ya * width] = calculateDynamicLighting(
-											col, xa, ya);
-								} else {
-									pixels[xa + ya * width] = col;
-								}
+
+								pixels[xa + ya * width] = col;
 
 							}
 						}
@@ -342,12 +333,8 @@ public class Screen {
 							// 0x->Hexzahl ff->alpha ff->R, 00->G, ff->B ==>
 							// pink
 							if (col != 0xffFF00FF) {
-								if (dynLighting && Game.dynamicLighting >=1) {
-									pixels[xa + ya * width] = calculateDynamicLighting(
-											col, xa, ya);
-								} else {
-									pixels[xa + ya * width] = col;
-								}
+								pixels[xa + ya * width] = col;
+
 							}
 						}
 					}
@@ -373,46 +360,35 @@ public class Screen {
 				if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
 					continue;
 				}
-				
+
 				Random random = new Random();
-				double factor = Math.sqrt(Math.pow(xa - x, 2)
-						+ Math.pow(ya - y, 2));
-				if (factor > (radius - (radius / 3) + random.nextInt(radius / 3))) {
+				double factor = Math.pow(xa - x, 2) + Math.pow(ya - y, 2);
+				if (factor > Math
+						.pow((radius - (radius / 3) + random
+								.nextInt(radius / 3)), 2)) {
 					continue;
 				}
-
-				String hexValues = Integer.toHexString(pixels[x + y * width]);
-
-				if (hexValues.length() < 8)
-					continue;
-				int col = 0;
-				for (int i = 0; i < 4; i++) {
-					if (i == 0) {
-						col += 0xff000000;
-						continue;
-					}
-					String parseValue = hexValues.substring(i * 2, i * 2 + 2);
-					int n = (int) Long.parseLong(parseValue, 16);					
-					n += intensity;
-					if (n > 255) {
-						n = 255;
-					}
-					
-					if (i != 1) {
-						n -= (int) factor;
-					}
-					else{
-						n -= (int) 0.2 * factor;
-					}
-					if (n < 0) {
-						n = 0;
-					}
-
-					col += (int) (n * Math.pow(16, (3 - i) * 2));
-					// val[i] = n + temp;// + (int) 0.2 * intensity - temp;
-
-				}
-				pixels[x + y * width] = col;
+				factor = Math.sqrt(factor);
+				pixels[x + y * width] = darkenColorAndGlow(
+						pixels[x + y * width], factor, intensity);
+				/*
+				 * String hexValues = Integer.toHexString(pixels[x + y *
+				 * width]);
+				 * 
+				 * if (hexValues.length() < 8) continue; int col = 0; for (int i
+				 * = 0; i < 4; i++) { if (i == 0) { col += 0xff000000; continue;
+				 * } String parseValue = hexValues.substring(i * 2, i * 2 + 2);
+				 * int n = (int) Long.parseLong(parseValue, 16); n += intensity;
+				 * if (n > 255) { n = 255; }
+				 * 
+				 * if (i != 1) { n -= (int) factor; } else { n -= (int) 0.2 *
+				 * factor; } if (n < 0) { n = 0; }
+				 * 
+				 * col += (int) (n * Math.pow(16, (3 - i) * 2)); // val[i] = n +
+				 * temp;// + (int) 0.2 * intensity - temp;
+				 * 
+				 * } pixels[x + y * width] = col;
+				 */
 			}
 		}
 
@@ -421,24 +397,32 @@ public class Screen {
 	/**
 	 * This method will darken the color so a radius of light around the player
 	 * is achieved.
-	 * 
-	 * @param col
-	 * @return
 	 */
-	public int calculateDynamicLighting(int col, int x, int y) {
+	public void lightRadius() {
+		int radius = 70;
 		if (Game.dynamicLighting < 2)
-			return col;
+			return;
 		Random random = new Random();
-		double factor = Math.sqrt(Math.pow(this.width / 2 - x, 2)
-				+ Math.pow(this.height / 2 - y, 2));
-		if (factor < (70 + random.nextInt(5))) {
-			return col;
+		for (int x = 0; x < this.width; x++) {
+			for (int y = 0; y < this.height; y++) {
+				double factor = Math.pow(this.width / 2 - x, 2)
+						+ Math.pow(this.height / 2 - y, 2);
+				if (factor < Math.pow(radius + random.nextInt(5), 2)) {
+					continue;
+				}
+				factor = Math.sqrt(factor);
+				pixels[x + y * this.width] = darkenColor(pixels[x + y
+						* this.width], factor);
+			}
 		}
+	}
+
+	private int darkenColor(int col, double factor) {
 		String hexValues = Integer.toHexString(col);
-		int darkerCol = 0xff000000;
+		String darkerCol = "ff";
 		if (hexValues.length() < 8)
 			return col;
-		for (int i = 1; i < 4; i++) {			
+		for (int i = 1; i < 4; i++) {
 			String parseValue = hexValues.substring(i * 2, i * 2 + 2);
 			int n = (int) Long.parseLong(parseValue, 16);
 			int temp = (int) (0.5 * factor);
@@ -448,10 +432,37 @@ public class Screen {
 			} else if (n > 255) {
 				n = 255;
 			}
-			darkerCol += n * Math.pow(16, (3 - i) * 2);
-
+			String hexString = Integer.toHexString(n);
+			if (hexString.length() < 2) {
+				darkerCol += "0";
+			}
+			darkerCol += Integer.toHexString(n);
 		}
-		return darkerCol;
+		return (int) Long.parseLong(darkerCol, 16);
+	}
+
+	private int darkenColorAndGlow(int col, double factor, int intensity) {		
+		String hexValues = Integer.toHexString(col);
+		String darkerCol = "ff";
+		if (hexValues.length() < 8)
+			return col;
+		for (int i = 1; i < 4; i++) {
+			String parseValue = hexValues.substring(i * 2, i * 2 + 2);
+			int n = (int) Long.parseLong(parseValue, 16);
+			int temp = (int) (0.5 * factor);
+			n += intensity;
+			if (n < 0) {
+				n = 0;
+			} else if (n > 255) {
+				n = 255;
+			}
+			String hexString = Integer.toHexString(n);
+			if (hexString.length() < 2) {
+				darkerCol += "0";
+			}
+			darkerCol += Integer.toHexString(n);
+		}
+		return (int) Long.parseLong(darkerCol, 16);
 	}
 
 	/**
