@@ -24,6 +24,7 @@ public class Screen {
 
 	public int width, height;
 	public int[] pixels;
+	private double[] factorArray;
 
 	// never used:
 	// public final int MAP_SIZE = 8;
@@ -52,6 +53,13 @@ public class Screen {
 		this.width = width;
 		this.height = height;
 		pixels = new int[width * height];
+		factorArray = new double[width * height];
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				factorArray[x + y * width] = Math.sqrt(Math.pow(width / 2 - x,
+						2) + Math.pow(height / 2 - y, 2));
+			}
+		}
 		// for (int i = 0; i < tiles.length; i++) {
 		// tiles[i] = random.nextInt(0xffffff);
 		// }
@@ -255,16 +263,14 @@ public class Screen {
 								if (((mob instanceof Chaser)
 										&& col <= 0xffffffff && col >= 0xffdadada)) {
 									col = 0xffdc0000;
-								}
-								if (mob instanceof BurningChaser
+								} else if (mob instanceof BurningChaser
 										&& col <= 0xffffffff
 										&& col >= 0xffdadada
 										&& !(col == 0xffff0000)
 										&& !(col == 0xffff5e00)
 										&& !(col == 0xffffd200)) {
 									col = 0xffdc0000;
-								}
-								if ((mob instanceof IntelligentMob
+								} else if ((mob instanceof IntelligentMob
 										&& col <= 0xffffffff && col >= 0xffdadada)) {
 									col = 0xff298e37;
 								}
@@ -398,19 +404,20 @@ public class Screen {
 	 * This method will darken the color so a radius of light around the player
 	 * is achieved.
 	 */
-	public void lightRadius() {
-		int radius = 70;
+	public void lightRadius() {		
 		if (Game.dynamicLighting < 2)
+		{
 			return;
+		}
+		
+		int radius = 70;
 		Random random = new Random();
 		for (int x = 0; x < this.width; x++) {
 			for (int y = 0; y < this.height; y++) {
-				double factor = Math.pow(this.width / 2 - x, 2)
-						+ Math.pow(this.height / 2 - y, 2);
-				if (factor < Math.pow(radius + random.nextInt(5), 2)) {
+				double factor = factorArray[x + y * width];
+				if (factor < radius + random.nextInt(5)) {
 					continue;
 				}
-				factor = Math.sqrt(factor);
 				pixels[x + y * this.width] = darkenColor(pixels[x + y
 						* this.width], factor);
 			}
@@ -419,12 +426,15 @@ public class Screen {
 
 	private int darkenColor(int col, double factor) {
 		String hexValues = Integer.toHexString(col);
-		String darkerCol = "ff";
-		if (hexValues.length() < 8)
+		if (hexValues.length() < 8) {
 			return col;
+		}
+
+		StringBuilder darkerCol = new StringBuilder();
+		darkerCol.append("ff");
 		for (int i = 1; i < 4; i++) {
-			String parseValue = hexValues.substring(i * 2, i * 2 + 2);
-			int n = (int) Long.parseLong(parseValue, 16);
+			int n = (int) Long.parseLong(hexValues.substring(i * 2, i * 2 + 2),
+					16);
 			int temp = (int) (0.5 * factor);
 			n = n + 10 - temp;
 			if (n < 0) {
@@ -434,22 +444,24 @@ public class Screen {
 			}
 			String hexString = Integer.toHexString(n);
 			if (hexString.length() < 2) {
-				darkerCol += "0";
+				darkerCol.append("0");
 			}
-			darkerCol += Integer.toHexString(n);
+			darkerCol.append(Integer.toHexString(n));
 		}
-		return (int) Long.parseLong(darkerCol, 16);
+		return (int) Long.parseLong(darkerCol.toString(), 16);
 	}
 
-	private int darkenColorAndGlow(int col, double factor, int intensity) {		
+	private int darkenColorAndGlow(int col, double factor, int intensity) {
 		String hexValues = Integer.toHexString(col);
-		String darkerCol = "ff";
-		if (hexValues.length() < 8)
+		if (hexValues.length() < 8) {
 			return col;
+		}
+
+		StringBuilder darkerCol = new StringBuilder();
+		darkerCol.append("ff");
 		for (int i = 1; i < 4; i++) {
-			String parseValue = hexValues.substring(i * 2, i * 2 + 2);
-			int n = (int) Long.parseLong(parseValue, 16);
-			int temp = (int) (0.5 * factor);
+			int n = (int) Long.parseLong(hexValues.substring(i * 2, i * 2 + 2),
+					16);
 			n += intensity;
 			if (n < 0) {
 				n = 0;
@@ -458,11 +470,11 @@ public class Screen {
 			}
 			String hexString = Integer.toHexString(n);
 			if (hexString.length() < 2) {
-				darkerCol += "0";
+				darkerCol.append("0");
 			}
-			darkerCol += Integer.toHexString(n);
+			darkerCol.append(Integer.toHexString(n));
 		}
-		return (int) Long.parseLong(darkerCol, 16);
+		return (int) Long.parseLong(darkerCol.toString(), 16);
 	}
 
 	/**
