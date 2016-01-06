@@ -8,6 +8,8 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 
+import com.irgndsondepp.clone.Game;
+
 /**
  * handles all the sound objects. they all have a path and a boolean play if
  * they are playing
@@ -86,6 +88,7 @@ public class Sound implements Runnable {
 	 * call the run method and setting the play value to true
 	 */
 	public void playSound() {
+		if (Game.mute) return;
 		play = true;
 		try {
 			Thread thread = new Thread(this);

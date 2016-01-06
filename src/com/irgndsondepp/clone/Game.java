@@ -40,7 +40,12 @@ public class Game extends Canvas implements Runnable {
 	// show the game in fullscreen mode
 	private boolean fullscreen = true;
 	// show dynamicLighting
-	public static boolean dynamicLighting = true;
+	// 0 = no dynamic Lighting
+	// 1 = burn and explosion lighting
+	// 2 = radiance around player
+	public static int dynamicLighting = 1;
+	// play sounds and music
+	public static boolean mute = false;
 	
 	private Thread thread;
 	private JFrame frame;

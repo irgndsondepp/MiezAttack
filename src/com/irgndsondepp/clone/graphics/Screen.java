@@ -174,7 +174,7 @@ public class Screen {
 								}
 							}
 							if (col != 0xffFF00FF) {
-								if (dynLighting && Game.dynamicLighting) {
+								if (dynLighting && (Game.dynamicLighting >= 1)) {
 									pixels[xa + ya * width] = calculateDynamicLighting(
 											col, xa, ya);
 								} else {
@@ -273,7 +273,7 @@ public class Screen {
 										&& col <= 0xffffffff && col >= 0xffdadada)) {
 									col = 0xff298e37;
 								}
-								if (Game.dynamicLighting) {
+								if (Game.dynamicLighting >= 1) {
 									pixels[xa + ya * width] = calculateDynamicLighting(
 											col, xa, ya);
 								} else {
@@ -342,7 +342,7 @@ public class Screen {
 							// 0x->Hexzahl ff->alpha ff->R, 00->G, ff->B ==>
 							// pink
 							if (col != 0xffFF00FF) {
-								if (dynLighting && Game.dynamicLighting) {
+								if (dynLighting && Game.dynamicLighting >=1) {
 									pixels[xa + ya * width] = calculateDynamicLighting(
 											col, xa, ya);
 								} else {
@@ -363,7 +363,7 @@ public class Screen {
 	 * @return
 	 */
 	public void AddDynamicLighting(int xa, int ya, int radius, int intensity) {
-		if (!Game.dynamicLighting)
+		if (Game.dynamicLighting < 1)
 			return;
 		xa -= this.xOffset;
 		ya -= this.yOffset;
@@ -426,7 +426,7 @@ public class Screen {
 	 * @return
 	 */
 	public int calculateDynamicLighting(int col, int x, int y) {
-		if (!Game.dynamicLighting)
+		if (Game.dynamicLighting < 2)
 			return col;
 		Random random = new Random();
 		double factor = Math.sqrt(Math.pow(this.width / 2 - x, 2)
