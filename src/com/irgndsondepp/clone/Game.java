@@ -467,7 +467,7 @@ public class Game extends Canvas implements Runnable {
 			BufferedReader br = new BufferedReader(fr);
 			String[] line;
 			try {
-				while ((line = br.readLine().split(";")) != null) {
+				while ((line = br.readLine().split("=")) != null) {
 					String option = line[0];
 					String setting = line[1];
 					if (option.equals("Fullscreen")) {
@@ -517,11 +517,11 @@ public class Game extends Canvas implements Runnable {
 		try {
 			FileWriter fw = new FileWriter(file);
 			StringBuilder sb = new StringBuilder();
-			sb.append("Fullscreen;").append(this.fullscreen).append("\r\n");
-			sb.append("Mute;").append(this.mute).append("\r\n");
-			sb.append("DynamicLighting;").append(this.dynamicLighting)
+			sb.append("Fullscreen=").append(this.fullscreen).append("\r\n");
+			sb.append("Mute=").append(this.mute).append("\r\n");
+			sb.append("DynamicLighting=").append(this.dynamicLighting)
 					.append("\r\n");
-			sb.append("Miezen;").append(this.startingMiezen);
+			sb.append("Miezen=").append(this.startingMiezen);
 			fw.write(sb.toString());
 			fw.close();
 		} catch (IOException e) {
