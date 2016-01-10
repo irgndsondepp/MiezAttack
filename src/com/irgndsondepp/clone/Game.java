@@ -10,6 +10,12 @@ import java.awt.Point;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -35,7 +41,7 @@ public class Game extends Canvas implements Runnable {
 	public static int height = width / 16 * 9;
 	public static int scale = 2;
 	public static int framerate = 60;
-	public static String title = "Clone Game";	
+	public static String title = "Clone Game";
 	public static int startingMiezen = 200;
 	// show the game in fullscreen mode
 	private boolean fullscreen = true;
@@ -46,7 +52,8 @@ public class Game extends Canvas implements Runnable {
 	public static int dynamicLighting = 1;
 	// play sounds and music
 	public static boolean mute = false;
-	
+	private static String options_file_name = "options.cfg";
+
 	private Thread thread;
 	private JFrame frame;
 	private boolean running = false;
@@ -57,8 +64,6 @@ public class Game extends Canvas implements Runnable {
 	private Level level;
 	private Player player;
 	private Random random = new Random();
-
-	
 
 	private BufferedImage image = new BufferedImage(width, height,
 			BufferedImage.TYPE_INT_RGB);
@@ -112,6 +117,7 @@ public class Game extends Canvas implements Runnable {
 	 */
 	public synchronized void stop() {
 		running = false;
+		saveOptions();
 		frame.dispose();
 		System.exit(0);
 		try {
@@ -125,7 +131,8 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	/**
-	 * the games run() method. contains the while(running) loop and calls the update() and render() methods. also calculates the framerate
+	 * the games run() method. contains the while(running) loop and calls the
+	 * update() and render() methods. also calculates the framerate
 	 */
 	public void run() {
 		long lastTime = System.nanoTime();
@@ -160,7 +167,7 @@ public class Game extends Canvas implements Runnable {
 				updates = 0;
 			}
 			if (key.exit)
-				running=false;
+				running = false;
 		}
 		stop();
 	}
@@ -358,10 +365,12 @@ public class Game extends Canvas implements Runnable {
 
 	/**
 	 * the main method initializes the game and starts a new game thread
+	 * 
 	 * @param ars
 	 */
 	public static void main(String[] ars) {
 		Game game = new Game();
+		game.loadOptions();
 		if (game.fullscreen) {
 			game.frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 			game.frame.setUndecorated(true);
@@ -379,6 +388,7 @@ public class Game extends Canvas implements Runnable {
 
 	/**
 	 * get the window width
+	 * 
 	 * @return
 	 */
 	public static int getWindowWidth() {
@@ -387,6 +397,7 @@ public class Game extends Canvas implements Runnable {
 
 	/**
 	 * get the window height
+	 * 
 	 * @return
 	 */
 	public static int getWindowHeight() {
@@ -396,6 +407,7 @@ public class Game extends Canvas implements Runnable {
 
 	/**
 	 * go to a menuscreen
+	 * 
 	 * @param screen
 	 */
 	public void setMenuScreen(Screen screen) {
@@ -417,6 +429,7 @@ public class Game extends Canvas implements Runnable {
 
 	/**
 	 * go to a menuscreen
+	 * 
 	 * @param menuScreen
 	 */
 	public void setMenuScreen(MenuScreen menuScreen) {
@@ -425,6 +438,7 @@ public class Game extends Canvas implements Runnable {
 
 	/**
 	 * return the screen width
+	 * 
 	 * @return
 	 */
 	public int getScreenWidth() {
@@ -433,10 +447,87 @@ public class Game extends Canvas implements Runnable {
 
 	/**
 	 * return the screen height
+	 * 
 	 * @return
 	 */
 	public int getScreenHeight() {
 		return this.frame.getHeight();
+	}
+
+	private void loadOptions() {
+		File file = new File(options_file_name);
+		if (file.exists() && !file.isDirectory()) {
+			FileReader fr;
+			try {
+				fr = new FileReader(file);
+			} catch (FileNotFoundException e) {
+				saveOptions();
+				return;
+			}
+			BufferedReader br = new BufferedReader(fr);
+			String[] line;
+			try {
+				while ((line = br.readLine().split(";")) != null) {
+					String option = line[0];
+					String setting = line[1];
+					if (option.equals("Fullscreen")) {
+						if (setting.equals("true")) {
+							fullscreen = true;
+						}
+						if (setting.equals("false")) {
+							fullscreen = false;
+						}
+					}
+					if (option.equals("Mute")) {
+						if (setting.equals("true")) {
+							mute = true;
+						}
+						if (setting.equals("false")) {
+							mute = false;
+						}
+					}
+					if (option.equals("DynamicLighting")) {
+						dynamicLighting = Integer.parseInt(setting);
+					}
+					if (option.equals("Miezen")) {
+						startingMiezen = Integer.parseInt(setting);
+					}
+				}
+			} catch (Exception e) {
+
+			}
+			try {
+				br.close();
+			} catch (IOException e) {
+
+			}
+			if (fr != null) {
+				try {
+					fr.close();
+				} catch (IOException e) {
+
+				}
+			}
+		}
+	}
+
+	private void saveOptions() {
+		File file = new File(options_file_name);
+
+		try {
+			FileWriter fw = new FileWriter(file);
+			StringBuilder sb = new StringBuilder();
+			sb.append("Fullscreen;").append(this.fullscreen).append("\r\n");
+			sb.append("Mute;").append(this.mute).append("\r\n");
+			sb.append("DynamicLighting;").append(this.dynamicLighting)
+					.append("\r\n");
+			sb.append("Miezen;").append(this.startingMiezen);
+			fw.write(sb.toString());
+			fw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
