@@ -65,16 +65,17 @@ public class Game extends Canvas implements Runnable {
 	private Player player;
 	private Random random = new Random();
 
-	private BufferedImage image = new BufferedImage(width, height,
-			BufferedImage.TYPE_INT_RGB);
+	private BufferedImage image;
 	// Als DataBufferInt gecastet Raster == Array des Bilds
-	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer())
-			.getData();
+	private int[] pixels;
 
 	/**
 	 * create a new game
 	 */
 	public Game() {
+		loadOptions();
+		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 		Dimension size = new Dimension(width * scale, height * scale);
 		setPreferredSize(size);
 
@@ -370,7 +371,6 @@ public class Game extends Canvas implements Runnable {
 	 */
 	public static void main(String[] ars) {
 		Game game = new Game();
-		game.loadOptions();
 		if (game.fullscreen) {
 			game.frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 			game.frame.setUndecorated(true);
@@ -384,25 +384,6 @@ public class Game extends Canvas implements Runnable {
 		game.frame.setLocationRelativeTo(null);
 		game.frame.setVisible(true);
 		game.start();
-	}
-
-	/**
-	 * get the window width
-	 * 
-	 * @return
-	 */
-	public static int getWindowWidth() {
-		return width * scale;
-	}
-
-	/**
-	 * get the window height
-	 * 
-	 * @return
-	 */
-	public static int getWindowHeight() {
-		// TODO Auto-generated method stub
-		return height * scale;
 	}
 
 	/**
@@ -489,6 +470,13 @@ public class Game extends Canvas implements Runnable {
 					if (option.equals("DynamicLighting")) {
 						dynamicLighting = Integer.parseInt(setting);
 					}
+					if (option.equals("Width")) {
+						width = Integer.parseInt(setting);
+						height = width / 16 * 9;
+					}
+					if (option.equals("Scale")) {
+						scale = Integer.parseInt(setting);
+					}
 					if (option.equals("Miezen")) {
 						startingMiezen = Integer.parseInt(setting);
 					}
@@ -521,6 +509,8 @@ public class Game extends Canvas implements Runnable {
 			sb.append("Mute=").append(this.mute).append("\r\n");
 			sb.append("DynamicLighting=").append(this.dynamicLighting)
 					.append("\r\n");
+			sb.append("Width=").append(this.width).append("\r\n");
+			sb.append("Scale=").append(this.scale).append("\r\n");
 			sb.append("Miezen=").append(this.startingMiezen);
 			fw.write(sb.toString());
 			fw.close();

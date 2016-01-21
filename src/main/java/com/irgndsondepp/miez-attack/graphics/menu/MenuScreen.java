@@ -69,6 +69,7 @@ public class MenuScreen extends Screen {
 				for (int x = 0; x < width; x++) {
 					if (x < 0 || x >= width || y < 0 || y >= height)
 						continue;
+					if (x+y*width>background.getPixels().length) continue;
 					pixels[x + y * width] = background.getPixel(x, y);
 				}
 			}
