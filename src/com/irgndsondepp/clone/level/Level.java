@@ -37,6 +37,7 @@ import com.irgndsondepp.clone.entity.projectile.Projectile;
 import com.irgndsondepp.clone.entity.projectile.RocketProjectile;
 import com.irgndsondepp.clone.graphics.Screen;
 import com.irgndsondepp.clone.graphics.Sprite;
+import com.irgndsondepp.clone.graphics.gameOverScreen;
 import com.irgndsondepp.clone.graphics.menu.HighscoreScreen;
 import com.irgndsondepp.clone.level.tile.Tile;
 

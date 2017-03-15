@@ -1,7 +1,4 @@
-package com.irgndsondepp.clone.level;
-
-import com.irgndsondepp.clone.graphics.Screen;
-import com.irgndsondepp.clone.graphics.SpriteSheet;
+package com.irgndsondepp.clone.graphics;
 
 /**
  * overlays the gameoverscreen
