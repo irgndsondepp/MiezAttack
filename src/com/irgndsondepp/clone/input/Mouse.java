@@ -5,7 +5,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 /**
- * the mouse class handels user input via mouse
+ * the mouse class handles user input via mouse
  * @author Robert
  *
  */

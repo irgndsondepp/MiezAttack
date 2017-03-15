@@ -18,8 +18,8 @@ public class MainMenuScreen extends MenuScreen {
 	public MainMenuScreen(Game game) {
 		super(game);
 		selectedOption = 0;
-		int w = game.width;
-		int h = game.height;
+		int w = Game.width;
+		int h = Game.height;
 
 		// add the different options
 		options.add(new MenuOption(w / 5, 16 * h / 30, 0, "Start Game"));
@@ -28,62 +28,11 @@ public class MainMenuScreen extends MenuScreen {
 		
 		possibleSelectionOptions = options.size();
 		
-		if (game.width < 600) {
+		if (Game.width < 600) {
 			background = SpriteSheet.mainMenuBackground;
 		} else {
 			background = SpriteSheet.mainMenuBackgroundBig;
 		}
-
-	}
-
-	/**
-	 * change the option up a step
-	 */
-	public void up() {
-		if (wait > time) {
-			changeSelectedOption(-1);
-			wait = 0;
-		}
-	}
-
-	/**
-	 * change the option down a step
-	 */
-	public void down() {
-		if (wait > time) {
-			changeSelectedOption(1);
-			wait = 0;
-		}
-	}
-
-	/**
-	 * select an option
-	 */
-	public void select() {
-		if (selectedOption == 0 && wait > time) {
-			deactivate();
-
-			game.makeNewLevel();
-		}
-		if (selectedOption == 1 && wait > time) {
-			game.setMenuScreen(new HighscoreScreen(width, height, game));
-		}
-		if (selectedOption == 2 && wait > time) {
-			game.stop();
-		}
-	}
-
-	/**
-	 * change the selection in one direction including a jump step from the bottom to the top and reversed
-	 */
-	protected void changeSelectedOption(int delta) {
-		selectedOption += delta;
-		if (selectedOption < 0) {
-			selectedOption = possibleSelectionOptions - 1;
-		}
-		if (selectedOption >= possibleSelectionOptions) {
-			selectedOption = 0;
-		}
-	}
+	}	
 
 }

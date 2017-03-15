@@ -9,7 +9,9 @@ import com.irgndsondepp.clone.graphics.Sprite;
 import com.irgndsondepp.clone.graphics.SpriteSheet;
 
 /**
- * creates a menuscreen extending the screen class. the menuscreen can be active or inactive and has different options on it.
+ * creates a menuscreen extending the screen class. the menuscreen can be active
+ * or inactive and has different options on it.
+ * 
  * @author Robert
  *
  */
@@ -28,6 +30,7 @@ public class MenuScreen extends Screen {
 
 	/**
 	 * create a new menuscreen
+	 * 
 	 * @param game
 	 */
 	public MenuScreen(Game game) {
@@ -92,13 +95,11 @@ public class MenuScreen extends Screen {
 		int[] pixels = cursor.pixels;
 		for (int y = 0; y < cursor.SIZE; y++) {
 			for (int x = 0; x < cursor.SIZE; x++) {
-				if ((xp + x) < 0 || (xp + x) >= width || (y + yp) < 0
-						|| (y + yp) >= height)
+				if ((xp + x) < 0 || (xp + x) >= width || (y + yp) < 0 || (y + yp) >= height)
 					continue;
 				int color = pixels[x + y * cursor.SIZE];
 				if (color != 0xffff00ff) {
-					this.pixels[x + xp + (y + yp) * width] = pixels[x + y
-							* cursor.SIZE];
+					this.pixels[x + xp + (y + yp) * width] = pixels[x + y * cursor.SIZE];
 				}
 			}
 		}
@@ -106,17 +107,23 @@ public class MenuScreen extends Screen {
 	}
 
 	/**
-	 * empty method
+	 * change the option up a step
 	 */
 	public void up() {
-
+		if (wait > time) {
+			changeSelectedOption(-1);
+			wait = 0;
+		}
 	}
 
 	/**
-	 * empty method
+	 * change the option down a step
 	 */
 	public void down() {
-
+		if (wait > time) {
+			changeSelectedOption(1);
+			wait = 0;
+		}
 	}
 
 	/**
@@ -134,10 +141,34 @@ public class MenuScreen extends Screen {
 	}
 
 	/**
-	 * empty method
+	 * select an option
 	 */
 	public void select() {
+		if (selectedOption == 0 && wait > time) {
+			deactivate();
 
+			game.makeNewLevel();
+		}
+		if (selectedOption == 1 && wait > time) {
+			game.setMenuScreen(new HighscoreScreen(width, height, game));
+		}
+		if (selectedOption == 2 && wait > time) {
+			game.stop();
+		}
+	}
+
+	/**
+	 * change the selection in one direction including a jump step from the
+	 * bottom to the top and reversed
+	 */
+	protected void changeSelectedOption(int delta) {
+		selectedOption += delta;
+		if (selectedOption < 0) {
+			selectedOption = possibleSelectionOptions - 1;
+		}
+		if (selectedOption >= possibleSelectionOptions) {
+			selectedOption = 0;
+		}
 	}
 
 	/**
@@ -149,6 +180,7 @@ public class MenuScreen extends Screen {
 
 	/**
 	 * check if the menuscreen is active
+	 * 
 	 * @return
 	 */
 	public boolean isActive() {
@@ -167,10 +199,6 @@ public class MenuScreen extends Screen {
 	 */
 	public void activate() {
 		active = true;
-	}
-	
-	protected void changeSelectedOption(int delta) {
-
 	}
 
 }
