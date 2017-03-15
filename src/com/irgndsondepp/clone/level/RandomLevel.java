@@ -7,7 +7,11 @@ import com.irgndsondepp.clone.Game;
 public class RandomLevel extends Level {
 
 	private static final Random random = new Random();
-
+	final private int grassTile = 0xff00ff00;
+	final private int rockTile = 0xff000000;
+	final private int flowerTile = 0xffffff00;
+	final private int treeTile = 0xffff0000;
+	
 	/**
 	 * create a random level, meaning a level with an array of random tiles. currently unused.
 	 * @param width
@@ -24,13 +28,13 @@ public class RandomLevel extends Level {
 			for (int x = 0; x < width; x++) {
 				int rand = random.nextInt(4);
 				if (rand == 0)
-					tiles[x + y * width] = 0xff00ff00;
+					tiles[x + y * width] = grassTile;
 				if (rand == 1)
-					tiles[x + y * width] = 0xff000000;
+					tiles[x + y * width] = rockTile;
 				if (rand == 2)
-					tiles[x + y * width] = 0xffffff00;
+					tiles[x + y * width] = flowerTile;
 				if (rand == 3)
-					tiles[x + y * width] = 0xffff0000;
+					tiles[x + y * width] = treeTile;
 			}
 		}
 	}

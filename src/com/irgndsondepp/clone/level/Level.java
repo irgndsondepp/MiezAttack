@@ -1,8 +1,13 @@
 package com.irgndsondepp.clone.level;
 
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
 
 import com.irgndsondepp.clone.Game;
 import com.irgndsondepp.clone.audio.Sound;
@@ -119,9 +124,7 @@ public class Level {
 	public Level(String path, Game game) {
 		this.game = game;
 		loadLevel(path);
-
 		setDestructibles();
-
 	}
 
 	/**
@@ -140,8 +143,7 @@ public class Level {
 			for (int x = 0; x < width; x++) {
 				// if there is a rock or tree tile in the level increase the
 				// amount
-				if (tiles[x + y * width] == Tile.col_spawn_rock
-						|| tiles[x + y * width] == Tile.col_spawn_tree) {
+				if (tiles[x + y * width] == Tile.col_spawn_rock || tiles[x + y * width] == Tile.col_spawn_tree) {
 					levelDestructibles++;
 				}
 			}
@@ -155,7 +157,20 @@ public class Level {
 	 * @param path
 	 */
 	protected void loadLevel(String path) {
+		try {
+			BufferedImage image = ImageIO.read(Level.class.getResource(path));
+			int w = image.getWidth();
+			int h = image.getHeight();
+			this.width = w;
+			this.height = h;
+			tiles = new int[w * h];
+			image.getRGB(0, 0, w, h, tiles, 0, w);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Exception! Could not load SpawnLevel File!");
+		}
 
+		this.tile_size = this.getTile(0, 0).size;
 	}
 
 	/**
@@ -198,13 +213,8 @@ public class Level {
 				// create a new highscore screen with the players kills,
 				// highest
 				// kill streak and amount of level destroyed
-				game.setMenuScreen(new HighscoreScreen(
-						width,
-						height,
-						killCounter,
-						highestKillStreak,
-						(int) (100 * ((double) levelDestroyed / (double) levelDestructibles)),
-						game));
+				game.setMenuScreen(new HighscoreScreen(width, height, killCounter, highestKillStreak,
+						(int) (100 * ((double) levelDestroyed / (double) levelDestructibles)), game));
 
 			}
 
@@ -354,8 +364,7 @@ public class Level {
 	 *            the size of the object
 	 * @return true if the tile at the position is solid, else return false
 	 */
-	public boolean tileCollision(double x, double y, double xchange,
-			double ychange, int size) {
+	public boolean tileCollision(double x, double y, double xchange, double ychange, int size) {
 		boolean solid = false;
 		for (int c = 0; c < 4; c++) {
 			// very complex hitboxing
@@ -435,8 +444,7 @@ public class Level {
 									this.add(new MachineGun(m.getX(), m.getY()));
 								}
 								if (r == 3) {
-									this.add(new RocketLauncher(m.getX(), m
-											.getY()));
+									this.add(new RocketLauncher(m.getX(), m.getY()));
 								}
 								if (r == 4) {
 									this.add(new MedKit(m.getX(), m.getY(), 25));
@@ -545,7 +553,7 @@ public class Level {
 		// render all items
 		for (int i = 0; i < items.size(); i++) {
 			items.get(i).render(screen);
-		}		
+		}
 
 		// render all projectiles
 		for (int i = 0; i < projectiles.size(); i++) {
@@ -589,16 +597,13 @@ public class Level {
 		}
 		if ((p.getGun() != null) && !(p.isDead())) {
 			Gun gun = p.getGun();
-			int xdraw = game.width - (gun.getSprite().SIZE * gun.getScale())
-					- 15;
+			int xdraw = game.width - (gun.getSprite().SIZE * gun.getScale()) - 15;
 			int ydraw = 15;
-			screen.renderScaledSprite(xdraw, ydraw, gun.getScale(),
-					Sprite.weaponBox, false, false);
+			screen.renderScaledSprite(xdraw, ydraw, gun.getScale(), Sprite.weaponBox, false, false);
 			screen.renderItem(xdraw, ydraw, gun, false, false);
 
 			xdraw -= Sprite.full_bullet.SIZE;
-			ydraw += (gun.getSprite().SIZE) * gun.getScale()
-					- Sprite.full_bullet.SIZE;
+			ydraw += (gun.getSprite().SIZE) * gun.getScale() - Sprite.full_bullet.SIZE;
 			// render full bullets
 			double nTotalShots = gun.getShotsTotal();
 			double nFullBullets = gun.getShotsLeft();
@@ -625,13 +630,11 @@ public class Level {
 			}
 
 			for (int i = 0; i < fullBullets; i++) {
-				screen.renderScaledSprite(xdraw, ydraw, 1, Sprite.full_bullet,
-						false, false);
+				screen.renderScaledSprite(xdraw, ydraw, 1, Sprite.full_bullet, false, false);
 				xdraw -= Sprite.full_bullet.SIZE;
 			}
 			for (int j = 0; j < emptyBullets; j++) {
-				screen.renderScaledSprite(xdraw, ydraw, 1, Sprite.spent_bullet,
-						false, false);
+				screen.renderScaledSprite(xdraw, ydraw, 1, Sprite.spent_bullet, false, false);
 				xdraw -= Sprite.spent_bullet.SIZE;
 			}
 		}
@@ -693,12 +696,7 @@ public class Level {
 		// return different tiles depending on their neighbours
 		// tiles are determined by the color from the loaded graphic at the
 		// position in the array
-
-		// grass=0x00ff00
-		// flower=0xffff00
-		// rock=0xff000000
-		// tree=0xffff0000
-
+		
 		if (tiles[x + y * width] == Tile.col_spawn_grass) {
 			boolean top = false;
 			boolean bottom = false;
@@ -940,8 +938,7 @@ public class Level {
 			int mte = m.getTopEdge();
 			int mbe = m.getBottomEdge();
 
-			if (((xm + (msize + mre)) >= x) && (xm - (msize + mle) < x)
-					&& ((ym + (msize + mbe)) >= y)
+			if (((xm + (msize + mre)) >= x) && (xm - (msize + mle) < x) && ((ym + (msize + mbe)) >= y)
 					&& ((ym - (msize + mte)) < y)) {
 				solid = true;
 
@@ -986,8 +983,7 @@ public class Level {
 		for (int i = 0; i < mobs.size(); i++) {
 			if (!solid) {
 				// player projectiles should not hit the player
-				if (p instanceof DudeProjectile
-						&& mobs.get(i) instanceof Player) {
+				if (p instanceof DudeProjectile && mobs.get(i) instanceof Player) {
 					solid = false;
 				} else {
 					Mob m = (Mob) mobs.get(i);
@@ -1002,9 +998,7 @@ public class Level {
 						int mte = m.getTopEdge();
 						int mbe = m.getBottomEdge();
 
-						if (((xm + (msize + mre)) >= x)
-								&& (xm - (msize + mle) < x)
-								&& ((ym + (msize + mbe)) >= y)
+						if (((xm + (msize + mre)) >= x) && (xm - (msize + mle) < x) && ((ym + (msize + mbe)) >= y)
 								&& ((ym - (msize + mte)) < y)) {
 							solid = true;
 							returnedMob = m;
@@ -1016,10 +1010,8 @@ public class Level {
 							}
 
 							// set dying mobs as burned if hit by fire ball
-							if ((p instanceof DudeProjectile)
-									&& !(p instanceof RocketProjectile)
-									&& !(p instanceof GunProjectile)
-									&& (m.getHP() <= 0) && (m instanceof Dummy)) {
+							if ((p instanceof DudeProjectile) && !(p instanceof RocketProjectile)
+									&& !(p instanceof GunProjectile) && (m.getHP() <= 0) && (m instanceof Dummy)) {
 								((Dummy) m).setBurned();
 							}
 						}
@@ -1141,10 +1133,8 @@ public class Level {
 				Item g = items.get(i);
 				int xg = g.getX();
 				int yg = g.getY();
-				int size = getClientPlayer().getSpriteSize()
-						* getClientPlayer().getScale();
-				if (((x - size) <= xg) && ((x + size) >= xg)
-						&& ((y + size) >= yg) && ((y - size) <= yg)) {
+				int size = getClientPlayer().getSpriteSize() * getClientPlayer().getScale();
+				if (((x - size) <= xg) && ((x + size) >= xg) && ((y + size) >= yg) && ((y - size) <= yg)) {
 					isItem = true;
 					return g;
 				}
@@ -1187,8 +1177,7 @@ public class Level {
 			Mob m = mobs.get(i);
 			int mx = m.getX();
 			int my = m.getY();
-			if ((mx >= (ex - er)) && (mx <= (ex + er)) && (my >= (ey - er))
-					&& (my <= (ey + er))) {
+			if ((mx >= (ex - er)) && (mx <= (ex + er)) && (my >= (ey - er)) && (my <= (ey + er))) {
 				m.getHit(e.getDamage());
 			}
 		}
@@ -1198,8 +1187,7 @@ public class Level {
 			Player p = players.get(i);
 			int px = p.getX();
 			int py = p.getY();
-			if ((px >= (ex - er)) && (px <= (ex + er)) && (py >= (ey - er))
-					&& (py <= (ey + er))) {
+			if ((px >= (ex - er)) && (px <= (ex + er)) && (py >= (ey - er)) && (py <= (ey + er))) {
 				p.getHit(e.getDamage() / 3);
 			}
 		}
@@ -1292,21 +1280,33 @@ public class Level {
 	 * spawns a Dummy at a random position, that is not solid and off screen
 	 * from the player
 	 */
-	private void spawnDummy() {
+	protected void spawnDummy() {
+		Point p = getCoordinates();
+		add(new Dummy(p.x, p.y));
+	}
+
+	private Point getCoordinates() {
+		int x = 0;
+		int y = 0;
 		if (getClientPlayer() != null) {
 			int px = getClientPlayer().getX();
 			int py = getClientPlayer().getY();
-			int x = random.nextInt(this.width);
-			int y = random.nextInt(this.height);
-			while ((getTile(x, y).solid() || ((x * tile_size - tile_size >= px
-					- Game.width / 2)
-					&& (x * tile_size + tile_size <= px + Game.width / 2)
-					&& (y * tile_size - tile_size >= py - Game.height / 2) && (y
-					* tile_size + tile_size <= py + Game.height / 2)))) {
+			x = random.nextInt(this.width);
+			y = random.nextInt(this.height);
+			while ((getTile(x, y).solid() || ((x * tile_size >= px - Game.width) && (x * tile_size <= px + Game.width)
+					&& (y * tile_size >= py - Game.height) && (y * tile_size <= py + Game.height)))) {
 				x = random.nextInt(this.width);
 				y = random.nextInt(this.height);
 			}
+		} else {
+			x = random.nextInt(width);
+			y = random.nextInt(height);
+			while (this.getTile(x, y).solid()) {
+				x = random.nextInt(width);
+				y = random.nextInt(height);
+			}
 		}
+		return new Point(x, y);
 	}
 
 	/**
@@ -1314,20 +1314,8 @@ public class Level {
 	 * from the player
 	 */
 	protected void spawnChaser() {
-		if (getClientPlayer() != null) {
-			int px = getClientPlayer().getX();
-			int py = getClientPlayer().getY();
-			int x = random.nextInt(this.width);
-			int y = random.nextInt(this.height);
-			while ((getTile(x, y).solid() || ((x * tile_size >= px - Game.width)
-					&& (x * tile_size <= px + Game.width)
-					&& (y * tile_size >= py - Game.height) && (y * tile_size <= py
-					+ Game.height)))) {
-				x = random.nextInt(this.width);
-				y = random.nextInt(this.height);
-			}
-			add(new Chaser(x * tile_size, y * tile_size));
-		}
+		Point p = getCoordinates();
+		add(new Chaser(p.x, p.y));
 	}
 
 	/**
@@ -1337,23 +1325,8 @@ public class Level {
 	 * @return
 	 */
 	private Boss spawnBoss() {
-		int x = random.nextInt(width);
-		int y = random.nextInt(height);
-		boss = null;
-		if (getClientPlayer() != null) {
-			Player p = getClientPlayer();
-			int px = p.getX();
-			int py = p.getY();
-			while ((x * tile_size >= px - Game.width)
-					&& (x * tile_size <= px + Game.width)
-					&& (y * tile_size >= py - Game.height)
-					&& (y * tile_size <= py + Game.height)) {
-				x = random.nextInt(width);
-				y = random.nextInt(height);
-			}
-			boss = new Cathulhu(x * tile_size, y * tile_size);
-		}
-
+		Point p = getCoordinates();
+		boss = new Cathulhu(p.x, p.y);
 		return boss;
 	}
 
