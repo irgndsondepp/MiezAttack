@@ -518,10 +518,10 @@ public class Game extends Canvas implements Runnable {
 			FileWriter fw = new FileWriter(file);
 			StringBuilder sb = new StringBuilder();
 			sb.append("Fullscreen=").append(this.fullscreen).append("\r\n");
-			sb.append("Mute=").append(this.mute).append("\r\n");
-			sb.append("DynamicLighting=").append(this.dynamicLighting)
+			sb.append("Mute=").append(Game.mute).append("\r\n");
+			sb.append("DynamicLighting=").append(dynamicLighting)
 					.append("\r\n");
-			sb.append("Miezen=").append(this.startingMiezen);
+			sb.append("Miezen=").append(startingMiezen);
 			fw.write(sb.toString());
 			fw.close();
 		} catch (IOException e) {

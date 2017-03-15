@@ -2,10 +2,9 @@ package com.irgndsondepp.clone.level.tile;
 
 import com.irgndsondepp.clone.graphics.Sprite;
 
-public class RockTile extends Tile {
+public class RoadTile extends Tile {
 
-	public RockTile(Sprite sprite) {
+	public RoadTile(Sprite sprite) {
 		super(sprite);
-		isSolid = true;
 	}
 }

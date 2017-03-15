@@ -4,7 +4,6 @@ import com.irgndsondepp.clone.graphics.Screen;
 import com.irgndsondepp.clone.graphics.Sprite;
 import com.irgndsondepp.clone.level.tile.spawn_level.SpawnFlowerTile;
 import com.irgndsondepp.clone.level.tile.spawn_level.SpawnGrassTile;
-import com.irgndsondepp.clone.level.tile.spawn_level.SpawnRoadTile;
 import com.irgndsondepp.clone.level.tile.spawn_level.SpawnRockTile;
 import com.irgndsondepp.clone.level.tile.spawn_level.SpawnTreeTile;
 
@@ -90,7 +89,7 @@ public class Tile {
 	// Spawn_tree Tiles
 	public static Tile spawn_tree = new SpawnTreeTile(Sprite.spawn_tree);
 
-	public static Tile spawn_road = new SpawnRoadTile(Sprite.spawn_road);
+	public static Tile spawn_road = new RoadTile(Sprite.spawn_road);
 
 	public final static int col_spawn_grass = 0xff00ff00;
 	public final static int col_spawn_rock = 0xff000000;
@@ -100,6 +99,9 @@ public class Tile {
 	public final static int col_spawn_player_start = 0xffff00ff;
 
 	public static Tile voidTile = new VoidTile(Sprite.voidSprite);
+	
+	protected boolean isSolid = false;
+	protected boolean isBreakable = false;
 
 	public Tile(Sprite sprite) {
 		this.sprite = sprite;
@@ -107,14 +109,14 @@ public class Tile {
 	}
 
 	public void render(int x, int y, Screen screen) {
-
+		screen.renderTile(x << 4, y << 4, this);
 	}
 
 	public boolean solid() {
-		return false;
+		return isSolid;
 	}
 
 	public boolean breakable() {
-		return false;
+		return isBreakable;
 	}
 }
