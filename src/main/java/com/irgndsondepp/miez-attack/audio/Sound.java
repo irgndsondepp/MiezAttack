@@ -1,7 +1,5 @@
 package com.irgndsondepp.clone.audio;
 
-import java.io.File;
-
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -13,9 +11,9 @@ import com.irgndsondepp.clone.Game;
 /**
  * handles all the sound objects. they all have a path and a boolean play if
  * they are playing
- * 
+ *
  * @author Robert
- * 
+ *
  */
 public class Sound implements Runnable {
 
@@ -75,13 +73,12 @@ public class Sound implements Runnable {
 
 	/**
 	 * create a sound or music file
-	 * 
+	 *
 	 * @param path
 	 *            is the path to the file from the resource folder
 	 */
 	public Sound(String path) {
-		String filePath = new File("").getAbsolutePath();
-		this.path = filePath + "/res" + path;
+		this.path = path;
 	}
 
 	/**
@@ -104,10 +101,6 @@ public class Sound implements Runnable {
 	 * to false.
 	 */
 	public void run() {
-		File soundFile = new File(path);
-		if (!soundFile.exists()){
-			return;
-		}
 		SourceDataLine soundLine = null;
 		int BUFFER_SIZE = 64 * 1024;
 
@@ -115,7 +108,7 @@ public class Sound implements Runnable {
 			//File soundFile = new File(path);
 
 			AudioInputStream audioInputStream = AudioSystem
-					.getAudioInputStream(soundFile);
+					.getAudioInputStream(Sound.class.getResource(path));
 			AudioFormat audioFormat = audioInputStream.getFormat();
 			DataLine.Info info = new DataLine.Info(SourceDataLine.class,
 					audioFormat);
@@ -151,7 +144,7 @@ public class Sound implements Runnable {
 
 	/**
 	 * check if a file is playing
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isPlaying() {
