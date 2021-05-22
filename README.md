@@ -9,10 +9,11 @@ You need to have the following tools installed:
 
 - OpenJDK
 - Maven
+- Make (although you can use the commands from 'Makefile' directly to build and run the game without Make)
 
 ## Build the game
 
 ```bash
-mvn package
-java -cp ./target/miez-attack-1.0.0.jar com.irgndsondepp.clone.Game
+make build
+make run
 ```
